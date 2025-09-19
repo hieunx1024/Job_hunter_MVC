@@ -6,49 +6,77 @@
                 <div class="sb-sidenav-menu-heading">Core</div>
 
                 <!-- Dashboard cho mọi role -->
-                <a class="nav-link" th:href="@{/}">
+
+
+                <!-- Menu admin -->
+
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Dashboard
                 </a>
-
-                <!-- Menu admin -->
-                <a class="nav-link" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/users}">
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                    th:href="@{/admin/users}">
                     <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                     Users
                 </a>
-                <a class="nav-link" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/orders}">
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                    th:href="@{/admin/categories}">
                     <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
-                    Orders
+                    Categories
                 </a>
 
-                <!-- Menu employer -->
-                <a class="nav-link" th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}" th:href="@{/employer/jobs}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
-                    My Jobs
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/jobs}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
+                    Jobs
                 </a>
-                <a class="nav-link" th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}" th:href="@{/employer/applications}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                    th:href="@{/admin/applications}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
                     Applications
                 </a>
 
+                <!-- Menu employer -->
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+                    th:href="@{/employer}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Dashboard
+                </a>
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+                    th:href="@{/employer/jobs}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
+                    My Jobs
+                </a>
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
+                    th:href="@{/employer/applications}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                    Applications
+                </a>
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}" th:href="@{/profile}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                    Profile
+                </a>
+
                 <!-- Menu candidate -->
-                <a class="nav-link" th:if="${#authorization.expression('hasRole(''CANDIDATE'')')}" th:href="@{/candidate/jobs}">
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''CANDIDATE'')')}"
+                    th:href="@{/candidate}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Dashboard
+                </a>
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''CANDIDATE'')')}"
+                    th:href="@{/candidate/jobs}">
                     <div class="sb-nav-link-icon"><i class="fas fa-search"></i></div>
                     Browse Jobs
                 </a>
-                <a class="nav-link" th:if="${#authorization.expression('hasRole(''CANDIDATE'')')}" th:href="@{/candidate/applications}">
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''CANDIDATE'')')}"
+                    th:href="@{/candidate/applications}">
                     <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                     My Applications
                 </a>
-
-                <div class="sb-sidenav-menu-heading">Addons</div>
-                <a class="nav-link" th:href="@{/charts}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                    Charts
-                </a>
-                <a class="nav-link" th:href="@{/tables}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                    Tables
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''CANDIDATE'')')}"
+                    th:href="@{/profile}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                    Profile
                 </a>
             </div>
         </div>

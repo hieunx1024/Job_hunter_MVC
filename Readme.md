@@ -26,11 +26,11 @@ A simple MVC-based job hunting application.
 2. Configure your MySQL database in `application.properties`.
 3. Build the project:
     ```bash
-    ./mvnw clean install
+    ./gradlew build
     ```
 4. Run the application:
     ```bash
-    ./mvnw spring-boot:run
+    ./gradlew bootRun
     ```
 
 ## Usage

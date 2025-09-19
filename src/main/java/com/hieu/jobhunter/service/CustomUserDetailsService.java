@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.hieu.jobhunter.domain.CustomUserDetails;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -20,14 +22,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO Auto-generated method stub
         com.hieu.jobhunter.domain.User user = this.userService.handleFindUserByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("user not found");
         }
-        return new User(user.getEmail(), user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
-
+        return new CustomUserDetails(user); // trả về CustomUserDetails thay vì Spring User
     }
 
 }

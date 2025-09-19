@@ -48,4 +48,8 @@ public class UserService {
         return user;
     }
 
+    public Optional<User> handleFinduserByUsername(String username){
+        return this.userRepository.findByUsername(username);
+    }
+
 }

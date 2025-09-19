@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.hieu.jobhunter.service.UserService;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = true) // để dùng @PreAuthorize
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final UserService userService;
@@ -26,19 +26,23 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CustomSuccessHandler customSuccessHandler() {
+        return new CustomSuccessHandler(userService);
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                // Phân quyền route
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/employer/**").hasRole("EMPLOYER")
                 .requestMatchers("/candidate/**").hasRole("CANDIDATE")
-                .requestMatchers("/login","/register", "/css/**", "/js/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .successHandler(new CustomSuccessHandler(userService)) // redirect theo role
+                .successHandler(customSuccessHandler()) // dùng bean method
                 .permitAll()
             )
             .logout(logout -> logout
@@ -46,10 +50,10 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
             )
-            .csrf(csrf -> csrf.disable()); // tạm thời, tuỳ nhu cầu
+            .exceptionHandling(exception -> exception
+                .accessDeniedPage("/403")
+            );
 
         return http.build();
     }
-
-
 }

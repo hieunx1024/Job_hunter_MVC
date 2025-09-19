@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard - SB Admin</title>
+
+    <!-- CSS external -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="sb-nav-fixed">
+
+    <!-- Navbar -->
+    <header th:replace="admin/fragments/navbar :: navbar"></header>
+
+    <div id="layoutSidenav">
+
+        <!-- Sidebar -->
+        <aside th:replace="admin/fragments/sidebar :: sidebar"></aside>
+
+        <!-- Content -->
+        <div class="container mt-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3>Categories</h3>
+                    <a th:href="@{/admin/categories/create}" class="btn btn-success">Create New</a>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Jobs Count</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="category : ${categories}">
+                                <td th:text="${category.id}"></td>
+                                <td th:text="${category.name}"></td>
+                                <td th:text="${#lists.size(category.jobs)}"></td>
+                                <td>
+                                    <a th:href="@{/admin/categories/update/{id}(id=${category.id})}"
+                                        class="btn btn-primary btn-sm">Edit</a>
+                                    <a th:href="@{/admin/categories/delete/{id}(id=${category.id})}"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure?')">Delete</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(categories)}">
+                                <td colspan="4" class="text-center">No categories found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    </div>
+
+    <!-- JS external -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+
+    <!-- JS local -->
+    <script th:src="@{/js/scripts.js}"></script>
+    <script th:src="@{/js/chart-area-demo.js}"></script>
+    <script th:src="@{/js/chart-bar-demo.js}"></script>
+    <script th:src="@{/js/datatables-simple-demo.js}"></script>
+
+</body>
+
+</html>
