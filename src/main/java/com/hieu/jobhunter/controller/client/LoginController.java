@@ -1,4 +1,5 @@
 package com.hieu.jobhunter.controller.client;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +33,7 @@ public class LoginController {
 
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") UserDto userDto,
-                               BindingResult bindingResult, Model model) {
+            BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             return "client/auth/register";
@@ -48,8 +49,13 @@ public class LoginController {
             return "client/auth/register";
         }
 
-        User user = this.userService.registerDTOtoUser(userDto, this.passwordEncoder);
-        this.userService.handleSaveUser(user);
+        try {
+            User user = this.userService.registerDTOtoUser(userDto, this.passwordEncoder);
+            this.userService.handleSaveUser(user);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "client/auth/register";
+        }
 
         return "redirect:/login";
     }

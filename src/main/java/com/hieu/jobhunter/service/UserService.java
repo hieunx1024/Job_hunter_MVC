@@ -19,8 +19,16 @@ public class UserService {
     }
 
     public void handleSaveUser(User user) {
-        this.userRepository.save(user);
+    // Kiểm tra email hoặc username đã tồn tại
+    if (userRepository.existsByEmail(user.getEmail())) {
+        throw new IllegalArgumentException("Email đã tồn tại!");
     }
+    if (userRepository.existsByUsername(user.getUsername())) {
+        throw new IllegalArgumentException("Username đã tồn tại!");
+    }
+
+    userRepository.save(user);
+}
 
     public void handleDeleteUser(Long id) {
         this.userRepository.deleteById(id);
