@@ -17,69 +17,33 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    public ApplicationController(ApplicationService applicationService){
-        this.applicationService=applicationService;
+    public ApplicationController(ApplicationService applicationService) {
+        this.applicationService = applicationService;
     }
 
-
-    //admin
+    // List tất cả applications (admin)
     @GetMapping("/admin/applications")
-    public String getAllApplicationsAdmin(Model model) {
+    public String listApplications(Model model) {
         List<Application> applications = applicationService.handleFetchAllApplications();
         model.addAttribute("applications", applications);
-        return "admin/application/list";
+        return "admin/application/list"; // Thymeleaf template
     }
 
+    // Chi tiết application (admin)
+    @GetMapping("/admin/applications/{id}")
+    public String applicationDetail(@PathVariable Long id, Model model) {
+        Optional<Application> appOpt = applicationService.handleFindApplicationById(id);
+        if (appOpt.isEmpty()) {
+            return "redirect:/admin/applications";
+        }
+        model.addAttribute("application", appOpt.get());
+        return "admin/application/detail"; // Thymeleaf template chi tiết
+    }
+
+    // Xóa application (admin)
     @PostMapping("/admin/applications/delete/{id}")
-    public String deleteApplicationAdmin(@PathVariable Long id) {
-        applicationService.handleDeleteApplication(id);;
+    public String deleteApplication(@PathVariable Long id) {
+        applicationService.handleDeleteApplication(id);
         return "redirect:/admin/applications";
     }
-
-
-
-    //employer
-    @GetMapping("/employer/applications")
-    public String getApplicationsForEmployer(Model model) {
-        List<Application> applications = applicationService.getApplicationsByCurrentUser();
-        model.addAttribute("applications", applications);
-        return "employer/application/list";
-    }
-
-    @GetMapping("/employer/applications/{id}")
-    public String getApplicationDetailEmployer(@PathVariable Long id, Model model) {
-        Optional<Application> appOp = applicationService.handleFindApplicationById(id);
-        if (appOp.isEmpty()) return "redirect:/employer/applications";
-        model.addAttribute("application", appOp.get());
-        return "employer/application/detail";
-    }
-
-
-    //candidate
-    @GetMapping("/candidate/applications")
-    public String getApplicationsForCandidate(Model model) {
-        List<Application> applications = applicationService.getApplicationsByCurrentUser();
-        model.addAttribute("applications", applications);
-        return "candidate/application/list";
-    }
-
-    @GetMapping("/candidate/applications/{id}")
-    public String getApplicationDetailCandidate(@PathVariable Long id, Model model) {
-        Optional<Application> appOp = applicationService.findByIdForCandidate(id);
-        if (appOp.isEmpty()) return "redirect:/candidate/applications";
-        model.addAttribute("application", appOp.get());
-        return "candidate/application/detail";
-    }
-
-    @PostMapping("/candidate/applications/apply/{jobId}")
-    public String applyToJob(@PathVariable Long jobId) {
-        applicationService.applyCurrentUserToJob(jobId);
-        return "redirect:/candidate/applications";
-    }
-
-    
-
-
-
-    
 }

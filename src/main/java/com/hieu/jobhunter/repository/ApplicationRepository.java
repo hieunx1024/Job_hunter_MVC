@@ -11,8 +11,13 @@ import com.hieu.jobhunter.domain.Job;
 import com.hieu.jobhunter.domain.User;
 
 @Repository
-public interface ApplicationRepository extends JpaRepository<Application,Long>{
+public interface ApplicationRepository extends JpaRepository<Application, Long> {
      List<Application> findByCandidate(User candidate);
+
      Optional<Application> findByIdAndCandidate(Long id, User candidate);
+
      boolean existsByJobAndCandidate(Job job, User candidate);
+
+     // Lấy tất cả application của các job thuộc employer
+     List<Application> findByJob_Employer(User employer);
 }

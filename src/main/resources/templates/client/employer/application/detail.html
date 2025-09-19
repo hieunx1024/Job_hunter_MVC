@@ -1,11 +1,32 @@
 <!DOCTYPE html>
-<html lang="en"xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Application Detail</title>
+    <link href="/css/styles.css" rel="stylesheet">
 </head>
+
 <body>
-    employer detail application
+    <div class="container mt-4">
+        <h2>Application Detail</h2>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${application.job.title}">Job Title</h5>
+                <p class="card-text">
+                    <strong>Candidate:</strong> <span th:text="${application.candidate.fullName}"></span><br>
+                    <strong>Email:</strong> <span th:text="${application.candidate.email}"></span><br>
+                    <strong>CV Link:</strong> <a th:href="${application.candidate.cvLink}" target="_blank">View
+                        CV</a><br>
+                    <strong>Status:</strong> <span th:text="${application.status}"></span><br>
+                    <strong>Applied at:</strong> <span
+                        th:text="${#dates.format(application.appliedAt,'dd/MM/yyyy HH:mm')}"></span><br>
+                    <strong>Cover Letter:</strong> <span th:text="${application.coverLetter}"></span>
+                </p>
+                <a th:href="@{/employer/applications}" class="btn btn-secondary">Back</a>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

@@ -1,6 +1,5 @@
 package com.hieu.jobhunter.service;
 
-import java.lang.StackWalker.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,81 +21,58 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
-    private final UserService userService;
 
     public ApplicationService(ApplicationRepository applicationRepository, UserRepository userRepository,
-            UserService userService, JobRepository jobRepository) {
+            JobRepository jobRepository) {
         this.applicationRepository = applicationRepository;
         this.userRepository = userRepository;
         this.jobRepository = jobRepository;
-        this.userService = userService;
     }
 
-    public void handleSaveApplication(Application application) {
-        applicationRepository.save(application);
+    // Lấy user hiện tại
+    private User getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = (principal instanceof UserDetails) ? ((UserDetails) principal).getUsername()
+                : principal.toString();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Current user not found"));
     }
 
-    public void handleDeleteApplication(Long applicationId) {
-        applicationRepository.deleteById(applicationId);
+    // Lấy tất cả application của các job thuộc employer hiện tại
+    public List<Application> getApplicationsForEmployerCurrentUser() {
+        User employer = getCurrentUser();
+        return applicationRepository.findByJob_Employer(employer);
     }
 
-    public Optional<Application> handleFindApplicationById(Long applicationId) {
-        return applicationRepository.findById(applicationId);
+    public Optional<Application> findApplicationById(Long id) {
+        return applicationRepository.findById(id);
+    }
+
+    public void deleteApplication(Long id) {
+        applicationRepository.deleteById(id);
     }
 
     public List<Application> handleFetchAllApplications() {
         return applicationRepository.findAll();
     }
 
+    public Optional<Application> handleFindApplicationById(Long applicationId) {
+        return applicationRepository.findById(applicationId);
+    }
+
+    public void handleDeleteApplication(Long applicationId) {
+        applicationRepository.deleteById(applicationId);
+    }
+
+    // Lấy tất cả application của candidate hiện tại
     public List<Application> getApplicationsByCurrentUser() {
-        // Lấy username của user đang đăng nhập
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-
-        Optional<User> userOpt = userService.handleFinduserByUsername(username);
-        if (userOpt.isEmpty()) {
-            throw new RuntimeException("Current user not found");
-        }
-
-        User currentUser = userOpt.get();
+        User currentUser = getCurrentUser(); // lấy user đang đăng nhập
         return applicationRepository.findByCandidate(currentUser);
     }
 
-    public Optional<Application> findByIdForCandidate(Long applicationId) {
-        // Lấy user hiện tại
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+    public void applyCurrentUserToJob(Job job, String coverLetter) {
+        User currentUser = getCurrentUser();
 
-        User currentUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Current user not found"));
-
-        // Tìm Application theo id và user
-        return applicationRepository.findByIdAndCandidate(applicationId, currentUser);
-    }
-
-    public void applyCurrentUserToJob(Long jobId, String coverLetter) {
-        // Lấy user hiện tại
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = (principal instanceof UserDetails) ? ((UserDetails) principal).getUsername()
-                : principal.toString();
-
-        User currentUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Current user not found"));
-
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
-
-        // Kiểm tra xem user đã apply chưa
         boolean alreadyApplied = applicationRepository.existsByJobAndCandidate(job, currentUser);
         if (alreadyApplied) {
             throw new RuntimeException("You have already applied for this job");
@@ -113,7 +89,24 @@ public class ApplicationService {
     }
 
     public void applyCurrentUserToJob(Long jobId) {
-        applyCurrentUserToJob(jobId, null);
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+        applyCurrentUserToJob(job, null);
+    }
+
+    // ApplicationService.java
+    public void updateApplicationStatus(Long applicationId, Application.Status status) {
+        Application app = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+
+        // Kiểm tra xem employer hiện tại có phải chủ job không
+        User employer = getCurrentUser(); // method đã có
+        if (!app.getJob().getEmployer().equals(employer)) {
+            throw new RuntimeException("You are not allowed to update this application");
+        }
+
+        app.setStatus(status);
+        applicationRepository.save(app);
     }
 
 }

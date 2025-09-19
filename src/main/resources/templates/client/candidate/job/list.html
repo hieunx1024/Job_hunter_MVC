@@ -1,11 +1,79 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Available Jobs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a2d9d6c9a2.js" crossorigin="anonymous"></script>
+    <style>
+        .job-card {
+            transition: transform 0.2s;
+        }
+
+        .job-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .job-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .job-info {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .btn-apply {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .btn-apply:hover {
+            background-color: #0b5ed7;
+            color: white;
+        }
+    </style>
 </head>
-<body>
-    candidate list job
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="mb-4 fw-bold">Available Jobs</h2>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col" th:each="job : ${jobs}">
+                <div class="card job-card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="job-title" th:text="${job.title}">Job Title</h5>
+                        <p class="job-info mb-1"><i class="fas fa-building me-1"></i> <span
+                                th:text="${job.category.name}">Category</span></p>
+                        <p class="job-info mb-1"><i class="fas fa-map-marker-alt me-1"></i> <span
+                                th:text="${job.location}">Location</span></p>
+                        <p class="job-info mb-3"><i class="fas fa-dollar-sign me-1"></i> <span
+                                th:text="${job.salary}">Salary</span></p>
+
+                        <div class="mt-auto d-flex justify-content-between">
+                            <a th:href="@{'/candidate/jobs/' + ${job.id}}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i> View
+                            </a>
+                            <form th:action="@{'/candidate/jobs/apply/' + ${job.id}}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn btn-apply btn-sm">
+                                    <i class="fas fa-paper-plane me-1"></i> Apply
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

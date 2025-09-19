@@ -1,11 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Applications</title>
+    <link href="/css/styles.css" rel="stylesheet">
 </head>
+
 <body>
-    employer list application
+    <div class="container mt-4">
+        <h2>Applications for Your Jobs</h2>
+        <div class="row">
+            <table class="table table-bordered mt-4">
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Job</th>
+                        <th>Applied At</th>
+                        <th>Cover Letter</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="app : ${applications}">
+                        <td th:text="${app.candidate.fullName}">Candidate Name</td>
+                        <td th:text="${app.job.title}">Job Title</td>
+                        <td
+                            th:text="${app.appliedAt != null ? #temporals.format(app.appliedAt, 'dd/MM/yyyy HH:mm') : ''}">
+                            Date</td>
+                        <td th:text="${app.coverLetter}">Cover Letter</td>
+                        <td th:text="${app.status}">Status</td>
+                        <td>
+                            <form th:action="@{'/employer/applications/update-status/' + ${app.id}}" method="post"
+                                style="display:inline-block">
+                                <input type="hidden" name="status" value="ACCEPTED" />
+                                <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                            </form>
+                            <form th:action="@{'/employer/applications/update-status/' + ${app.id}}" method="post"
+                                style="display:inline-block">
+                                <input type="hidden" name="status" value="REJECTED" />
+                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
+
 </html>

@@ -33,26 +33,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/employer/**").hasRole("EMPLOYER")
-                .requestMatchers("/candidate/**").hasRole("CANDIDATE")
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .successHandler(customSuccessHandler()) // dùng bean method
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-            )
-            .exceptionHandling(exception -> exception
-                .accessDeniedPage("/403")
-            );
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/employer/**").hasRole("EMPLOYER")
+                        .requestMatchers("/candidate/**").hasRole("CANDIDATE")
+                        .requestMatchers("/profile/**").authenticated()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .usernameParameter("email") // đây là key quan trọng
+                        .passwordParameter("password")
+                        .successHandler(customSuccessHandler())
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll())
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/403"));
 
         return http.build();
     }

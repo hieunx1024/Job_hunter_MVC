@@ -19,16 +19,13 @@ public class UserService {
     }
 
     public void handleSaveUser(User user) {
-    // Kiểm tra email hoặc username đã tồn tại
-    if (userRepository.existsByEmail(user.getEmail())) {
-        throw new IllegalArgumentException("Email đã tồn tại!");
-    }
-    if (userRepository.existsByUsername(user.getUsername())) {
-        throw new IllegalArgumentException("Username đã tồn tại!");
-    }
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser.isPresent() && !existingUser.get().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Email đã tồn tại!");
+        }
 
-    userRepository.save(user);
-}
+        userRepository.save(user);
+    }
 
     public void handleDeleteUser(Long id) {
         this.userRepository.deleteById(id);
@@ -42,8 +39,8 @@ public class UserService {
         return this.userRepository.findById(id);
     }
 
-    public User handleFindUserByEmail(String email) {
-        return this.userRepository.getUserByEmail(email);
+    public Optional<User> handleFindUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
     }
 
     public User registerDTOtoUser(UserDto userDto, PasswordEncoder passwordEncoder) {
@@ -56,8 +53,8 @@ public class UserService {
         return user;
     }
 
-    public Optional<User> handleFinduserByUsername(String username){
-        return this.userRepository.findByUsername(username);
+    public Optional<User> handleFinduserByUsername(String username) {
+        return this.userRepository.findByEmail(username);
     }
 
 }

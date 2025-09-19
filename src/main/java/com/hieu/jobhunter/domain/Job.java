@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,4 +42,3 @@ public class Job {
 
     // getters/setters
 }
-
