@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Job Detail</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+
+<body class="container mt-4">
+    <h2 th:text="${job.title}">Job Title</h2>
+    <p><strong>Company:</strong> <span th:text="${job.employer.fullName}">Employer</span></p>
+    <p><strong>Location:</strong> <span th:text="${job.location}">Location</span></p>
+    <p><strong>Salary:</strong> <span th:text="${job.salary}">Salary</span></p>
+    <p><strong>Description:</strong></p>
+    <p th:text="${job.description}">Job description here...</p>
+
+    <a th:href="@{/employer/jobs}" class="btn btn-secondary mt-3">Back to Jobs</a>
+</body>
+
+</html>

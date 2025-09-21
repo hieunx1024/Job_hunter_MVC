@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 th:text="${job.title}">Job Title</h2>
+        <p><strong>Employer:</strong> <span th:text="${job.employer.fullName}">Employer Name</span></p>
+        <p><strong>Location:</strong> <span th:text="${job.location}">Location</span></p>
+        <p><strong>Category:</strong> <span
+                th:text="${job.category != null ? job.category.name : 'N/A'}">Category</span></p>
+        <p><strong>Salary:</strong> <span th:text="${job.salary}">Salary</span></p>
+        <p><strong>Description:</strong></p>
+        <p th:text="${job.description}">Job description</p>
+        <a th:href="@{/admin/jobs}" class="btn btn-primary mt-3">Back to Jobs List</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

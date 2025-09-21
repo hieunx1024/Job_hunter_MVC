@@ -90,4 +90,10 @@ public class JobService {
         return jobRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("Job not found"));
     }
+
+    public void deleteJobAsAdmin(Long jobId) {
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
+        jobRepository.delete(job);
+    }
 }

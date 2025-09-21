@@ -11,4 +11,6 @@ import com.hieu.jobhunter.domain.Job;
 public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByEmployerEmail(String email);
 
+    List<Job> findByEmployer_Email(String email);
+
 }

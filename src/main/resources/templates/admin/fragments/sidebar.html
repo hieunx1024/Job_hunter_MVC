@@ -6,7 +6,10 @@
                 <div class="sb-sidenav-menu-heading">Core</div>
 
                 <!-- Dashboard cho mọi role -->
-
+                <a class="nav-link" th:href="@{/}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Home
+                </a>
 
                 <!-- Menu admin -->
 
@@ -56,8 +59,7 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                     Profile
                 </a>
-                <a class="nav-link" th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}"
-                    th:href="@{/blogs}">
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''EMPLOYER'')')}" th:href="@{/blogs}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Blogs management
                 </a>
@@ -83,8 +85,7 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
                     Profile
                 </a>
-                <a class="nav-link" th:if="${#authorization.expression('hasRole(''CANDIDATE'')')}"
-                    th:href="@{/blogs}">
+                <a class="nav-link" th:if="${#authorization.expression('hasRole(''CANDIDATE'')')}" th:href="@{/blogs}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Blogs management
                 </a>

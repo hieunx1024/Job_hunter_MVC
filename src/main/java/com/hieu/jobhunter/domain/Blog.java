@@ -24,5 +24,15 @@ public class Blog {
     @JoinColumn(name = "author_id")
     private User author;
 
+    // ảnh minh họa (có thể null)
+    private String imageUrl;
+
+    @Transient
+    public String getExcerpt() {
+        if (content == null)
+            return null;
+        return content.length() > 150 ? content.substring(0, 150) + "..." : content;
+    }
+
     private LocalDateTime createdAt = LocalDateTime.now();
 }

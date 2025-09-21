@@ -71,4 +71,13 @@ public class JobController {
         jobService.deleteJob(id, principal.getName());
         return "redirect:/employer/jobs";
     }
+
+    // Xem chi tiết job
+    @GetMapping("/{id}")
+    public String viewJobDetail(@PathVariable Long id, Model model, Principal principal) {
+        Job job = jobService.findByIdForEmployer(id, principal.getName());
+        model.addAttribute("job", job);
+        return "client/employer/job/detail"; // trỏ tới file detail.html
+    }
+
 }
