@@ -13,6 +13,7 @@ A simple MVC-based job hunting application.
 
 - Java
 - Spring Boot (MVC framework)
+- Spring Security 6
 - Thymeleaf (template engine)
 - MySQL
 
